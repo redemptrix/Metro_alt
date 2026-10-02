@@ -124,6 +124,12 @@ object PreferenceUtil {
             putString(SAF_SDCARD_URI, value)
         }
 
+    var neteaseFolderUri
+        get() = sharedPreferences.getStringOrDefault(NETEASE_FOLDER_URI, "")
+        set(value) = sharedPreferences.edit {
+            putString(NETEASE_FOLDER_URI, value)
+        }
+
     var albumArtistsOnly
         get() = sharedPreferences.getBoolean(
             ALBUM_ARTISTS_ONLY,

@@ -2,6 +2,34 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <androidx.preference.Preference
+        android:key="import_ncm"
+        android:layout="@layout/list_item_view"
+        android:summary="@string/import_ncm_summary"
+        android:title="@string/import_ncm"
+        app:icon="@drawable/ic_library_add" />
+
+    <androidx.preference.Preference
+        android:key="import_ncm_folder"
+        android:layout="@layout/list_item_view"
+        android:summary="@string/import_ncm_folder_summary"
+        android:title="@string/import_ncm_folder"
+        app:icon="@drawable/ic_library_add" />
+
+    <androidx.preference.Preference
+        android:key="netease_folder"
+        android:layout="@layout/list_item_view"
+        android:summary="@string/netease_folder_summary"
+        android:title="@string/netease_folder"
+        app:icon="@drawable/ic_folder" />
+
+    <androidx.preference.Preference
+        android:key="sync_netease"
+        android:layout="@layout/list_item_view"
+        android:summary="@string/sync_netease_summary"
+        android:title="@string/sync_netease"
+        app:icon="@drawable/ic_refresh" />
+
     <code.name.monkey.retromusic.preferences.BlacklistPreference
         android:key="blacklist"
         android:layout="@layout/list_item_view"

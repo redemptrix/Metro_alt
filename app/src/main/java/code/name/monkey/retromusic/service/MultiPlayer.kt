@@ -18,6 +18,7 @@ import android.media.MediaPlayer
 import android.os.PowerManager
 import android.util.Log
 import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.extensions.playbackPath
 import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.extensions.uri
 import code.name.monkey.retromusic.model.Song
@@ -53,7 +54,7 @@ class MultiPlayer(context: Context) : LocalPlayback(context) {
         completion: (success: Boolean) -> Unit,
     ) {
         isInitialized = false
-        setDataSourceImpl(mCurrentMediaPlayer, song.uri.toString()) { success ->
+        setDataSourceImpl(mCurrentMediaPlayer, song.playbackPath) { success ->
             isInitialized = success
             if (isInitialized) {
                 setNextDataSource(null)

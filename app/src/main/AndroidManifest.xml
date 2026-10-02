@@ -4,6 +4,7 @@
     package="code.name.monkey.retromusic"
     android:installLocation="auto">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
@@ -123,6 +124,10 @@
         </activity>
         <activity android:name=".activities.tageditor.AlbumTagEditorActivity" />
         <activity android:name=".activities.tageditor.SongTagEditorActivity" />
+        <activity
+            android:name=".activities.FetchLyricsActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.RetroMusic.Dialog" />
         <activity android:name=".activities.LicenseActivity" />
         <activity android:name=".activities.bugreport.BugReportActivity" />
         <activity android:name=".activities.ShareInstagramStory" />
@@ -167,6 +172,41 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.rmbak" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.rmbak" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.rmbak" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.NcmImportActivity"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:label="@string/import_ncm"
+            android:theme="@style/Theme.RetroMusic.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/octet-stream" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--
+                    Match .ncm files at various path depths. Android's
+                    PatternMatcher can't match a leading . in the path
+                    unless it is explicitly matched.
+                -->
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.ncm" />
+                <data android:pathPattern=".*\\..*\\.ncm" />
+                <data android:pathPattern=".*\\..*\\..*\\.ncm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.ncm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.ncm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.ncm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.ncm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.ncm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.ncm" />
             </intent-filter>
         </activity>
 

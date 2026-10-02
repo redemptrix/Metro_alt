@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.InputType
 import android.view.*
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,12 +44,16 @@ import code.name.monkey.retromusic.helper.MusicProgressViewUpdateHelper
 import code.name.monkey.retromusic.lyrics.LrcView
 import code.name.monkey.retromusic.model.AudioTagInfo
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.ncm.MetadataFetcher
+import code.name.monkey.retromusic.ncm.NcmInfo
 import code.name.monkey.retromusic.util.FileUtils
 import code.name.monkey.retromusic.util.LyricUtil
 import code.name.monkey.retromusic.util.UriUtil
 import com.afollestad.materialdialogs.input.input
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey
 import java.io.File
@@ -90,6 +95,7 @@ class LyricsFragment : AbsMainActivityFragment(R.layout.fragment_lyrics),
             registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
                 if (it.resultCode == Activity.RESULT_OK) {
                     FileUtils.copyFileToUri(requireContext(), cacheFile, song.uri)
+                    loadLyrics()
                 }
             }
         editSyncedLyricsLauncher =
@@ -191,8 +197,57 @@ class LyricsFragment : AbsMainActivityFragment(R.layout.fragment_lyrics),
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_search) {
             openUrl(googleSearchLrcUrl)
+        } else if (item.itemId == R.id.action_fetch_lyrics) {
+            fetchLyricsOnline()
         }
         return false
+    }
+
+    private fun fetchLyricsOnline() {
+        val current = song
+        Toast.makeText(context, R.string.fetching_lyrics, Toast.LENGTH_SHORT).show()
+        val info = NcmInfo(
+            format = "",
+            title = current.title,
+            artists = listOf(current.artistName),
+            album = current.albumName,
+            cover = null,
+            musicId = null,
+        )
+        GlobalScope.launch {
+            val lrc = MetadataFetcher.fetchLyrics(info)
+            withContext(Dispatchers.Main) {
+                if (lrc.isNullOrBlank()) {
+                    Toast.makeText(context, R.string.lyrics_not_found, Toast.LENGTH_SHORT).show()
+                } else {
+                    writeFetchedLyrics(lrc)
+                }
+            }
+        }
+    }
+
+    private fun writeFetchedLyrics(lyrics: String) {
+        val fieldKeyValueMap = EnumMap<FieldKey, String>(FieldKey::class.java)
+        fieldKeyValueMap[FieldKey.LYRICS] = lyrics
+        GlobalScope.launch {
+            if (VersionUtils.hasR()) {
+                cacheFile = TagWriter.writeTagsToFilesR(
+                    requireContext(),
+                    AudioTagInfo(listOf(song.data), fieldKeyValueMap, null)
+                )[0]
+                val pendingIntent = MediaStore.createWriteRequest(
+                    requireContext().contentResolver,
+                    listOf(song.uri)
+                )
+                normalLyricsLauncher.launch(IntentSenderRequest.Builder(pendingIntent).build())
+            } else {
+                TagWriter.writeTagsToFiles(
+                    requireContext(),
+                    AudioTagInfo(listOf(song.data), fieldKeyValueMap, null)
+                )
+                loadLyrics()
+            }
+        }
     }
 
     @SuppressLint("CheckResult")

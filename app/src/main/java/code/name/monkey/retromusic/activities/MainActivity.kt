@@ -29,6 +29,7 @@ import code.name.monkey.retromusic.helper.SearchQueryHelper.getSongs
 import code.name.monkey.retromusic.interfaces.IScrollHelper
 import code.name.monkey.retromusic.model.CategoryInfo
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.ncm.NcmPlaybackHelper
 import code.name.monkey.retromusic.repository.PlaylistSongsLoader
 import code.name.monkey.retromusic.service.MusicService
 import code.name.monkey.retromusic.util.PreferenceUtil
@@ -152,7 +153,10 @@ class MainActivity : AbsSlidingMusicPanelActivity() {
                 handled = true
             }
             if (uri != null && uri.toString().isNotEmpty()) {
-                MusicPlayerRemote.playFromUri(this@MainActivity, uri)
+                // 优先尝试直接解码播放 NCM，否则走原有的媒体库播放流程
+                if (!NcmPlaybackHelper.play(this@MainActivity, uri)) {
+                    MusicPlayerRemote.playFromUri(this@MainActivity, uri)
+                }
                 handled = true
             } else if (MediaStore.Audio.Playlists.CONTENT_TYPE == mimeType) {
                 val id = parseLongFromIntent(intent, "playlistId", "playlist")

@@ -45,4 +45,8 @@
         android:id="@+id/action_delete_from_device"
         android:title="@string/action_delete_from_device"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_fetch_lyrics"
+        android:title="@string/fetch_lyrics"
+        app:showAsAction="never" />
 </menu>

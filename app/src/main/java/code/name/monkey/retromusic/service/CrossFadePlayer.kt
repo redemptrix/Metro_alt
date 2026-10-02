@@ -8,6 +8,7 @@ import android.os.PowerManager
 import code.name.monkey.appthemehelper.util.VersionUtils.hasMarshmallow
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.extensions.showToast
+import code.name.monkey.retromusic.extensions.playbackPath
 import code.name.monkey.retromusic.extensions.uri
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
@@ -134,7 +135,7 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
         /* We've already set DataSource if initialized is true in setNextDataSource */
         if (!hasDataSource) {
             getCurrentPlayer()?.let {
-                setDataSourceImpl(it, song.uri.toString()) { success ->
+                setDataSourceImpl(it, song.playbackPath) { success ->
                     mIsInitialized = success
                     completion(success)
                 }
@@ -310,7 +311,7 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
                 // And MusicPlayerRemote don't have access to MusicService
                 if (nextSong != null && nextSong != Song.emptySong) {
                     nextDataSource = null
-                    setDataSourceImpl(player, nextSong.uri.toString()) { success ->
+                    setDataSourceImpl(player, nextSong.playbackPath) { success ->
                         if (success) switchPlayer()
                     }
 

@@ -7,6 +7,14 @@ import code.name.monkey.retromusic.util.MusicUtil
 
 val Song.uri get() = MusicUtil.getSongFileUri(songId = id)
 
+/**
+ * MediaPlayer 实际使用的数据源：
+ * - 正常媒体库歌曲（id >= 0）用 content URI；
+ * - 合成/临时歌曲（id < 0，例如直接播放的 NCM 解密临时文件）直接用文件路径。
+ */
+val Song.playbackPath: String
+    get() = if (id < 0 && data.isNotBlank()) data else uri.toString()
+
 val Song.albumArtUri get() = MusicUtil.getMediaStoreAlbumCoverUri(albumId)
 
 fun ArrayList<Song>.toMediaSessionQueue(): List<QueueItem> {

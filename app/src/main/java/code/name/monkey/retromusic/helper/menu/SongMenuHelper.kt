@@ -25,6 +25,7 @@ import androidx.navigation.findNavController
 import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.EXTRA_ARTIST_ID
 import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.activities.FetchLyricsActivity
 import code.name.monkey.retromusic.activities.tageditor.AbsTagEditorActivity
 import code.name.monkey.retromusic.activities.tageditor.SongTagEditorActivity
 import code.name.monkey.retromusic.dialogs.AddToPlaylistDialog
@@ -125,6 +126,10 @@ object SongMenuHelper : KoinComponent {
             R.id.action_add_to_blacklist -> {
                 BlacklistStore.getInstance(activity).addPath(File(song.data))
                 libraryViewModel.forceReload(ReloadType.Songs)
+                return true
+            }
+            R.id.action_fetch_lyrics -> {
+                activity.startActivity(FetchLyricsActivity.createIntent(activity, song))
                 return true
             }
         }

@@ -54,6 +54,7 @@ import code.name.monkey.retromusic.auto.AutoMediaIDHelper
 import code.name.monkey.retromusic.auto.AutoMusicProvider
 import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.extensions.toMediaSessionQueue
+import code.name.monkey.retromusic.extensions.playbackPath
 import code.name.monkey.retromusic.extensions.uri
 import code.name.monkey.retromusic.glide.BlurTransformation
 import code.name.monkey.retromusic.glide.RetroGlideExtension.getSongModel
@@ -832,7 +833,7 @@ class MusicService : MediaBrowserServiceCompat(),
     fun prepareNextImpl() {
         try {
             val nextPosition = getNextPosition(false)
-            playbackManager.setNextDataSource(getSongAt(nextPosition).uri.toString())
+            playbackManager.setNextDataSource(getSongAt(nextPosition).playbackPath)
             this.nextPosition = nextPosition
         } catch (ignored: Exception) {
         }
